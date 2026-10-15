@@ -1,248 +1,57 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Parivartan 2.0 — Particle Experience</title>
-
 <style>
-:root {
-  --bg: #05060d;
-  --panel: rgba(13, 16, 31, .88);
-  --border: rgba(255,255,255,.12);
-  --text: #f4f6ff;
-  --muted: #9ba3c7;
-  --cyan: #63e8ff;
-  --purple: #b76bff;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  overflow: hidden;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
-}
-#scene {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-.panel {
-  position: fixed;
-  z-index: 5;
-  top: 18px;
-  left: 18px;
-  width: min(330px, calc(100vw - 36px));
-  max-height: calc(100vh - 36px);
-  overflow-y: auto;
-  padding: 19px;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  background: var(--panel);
-  backdrop-filter: blur(22px);
-  box-shadow: 0 18px 70px #0008;
-  scrollbar-width: thin;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  margin-bottom: 4px;
-}
-.logo {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
-  border-radius: 13px;
-  color: #05060d;
-  font-size: 23px;
-  font-weight: 900;
-  background: linear-gradient(135deg,var(--cyan),var(--purple));
-}
-h1 { font-size: 19px; margin: 0; letter-spacing: -.5px; }
-.subtitle { color: var(--muted); font-size: 11px; margin-top: 4px; }
-.section-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin: 20px 0 11px;
-  color: #c8cce8;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-}
-.pill {
-  padding: 4px 7px;
-  border-radius: 30px;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: .6px;
-  color: var(--muted);
-  background: #ffffff0c;
-  border: 1px solid var(--border);
-}
-.pill.on { color: var(--cyan); border-color: #63e8ff55; }
-button, select {
-  color: var(--text);
-  background: #ffffff0b;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 11px;
-  font: inherit;
-  font-size: 12px;
-  cursor: pointer;
-  transition: .2s;
-}
-button:hover { border-color: #63e8ff99; background: #63e8ff12; }
-button.active {
-  color: var(--cyan);
-  border-color: #63e8ff88;
-  background: #63e8ff14;
-}
-button:disabled { opacity: .45; cursor: not-allowed; }
-select { width: 100%; outline: none; }
-select option { background: #111426; }
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; }
-.shape-btn { padding: 10px 5px; font-size: 11px; }
-.control { margin: 13px 0; }
-.control-label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 9px;
-  color: #c9cde4;
-  font-size: 11px;
-}
-output { color: var(--cyan); font-variant-numeric: tabular-nums; }
-input[type=range] {
-  width: 100%;
-  accent-color: var(--cyan);
-  cursor: pointer;
-}
-.divider { height: 1px; margin-top: 17px; background: var(--border); }
-.hint {
-  margin-top: 9px;
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.6;
-}
-.meter {
-  height: 7px;
-  overflow: hidden;
-  border-radius: 20px;
-  background: #ffffff12;
-  margin-top: 10px;
-}
-#audioMeter {
-  width: 0%;
-  height: 100%;
-  border-radius: 20px;
-  background: linear-gradient(90deg,#63e8ff,#b76bff,#ff6bba);
-  box-shadow: 0 0 15px #b76bff;
-  transition: width .045s linear;
-}
-#cameraPreview {
-  display: none;
-  width: 100%;
-  max-height: 130px;
-  object-fit: cover;
-  transform: scaleX(-1);
-  border-radius: 10px;
-  margin-top: 10px;
-  background: #000;
-}
-.statusline {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--muted);
-  font-size: 10px;
-  margin-top: 11px;
-}
-.dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #6b718b;
-}
-.dot.live { background: #65f4b0; box-shadow: 0 0 10px #65f4b0; }
-#topStatus {
-  position: fixed;
-  z-index: 3;
-  top: 20px;
-  right: 20px;
-  padding: 9px 13px;
-  border: 1px solid var(--border);
-  border-radius: 30px;
-  background: #080b18a8;
-  backdrop-filter: blur(12px);
-  color: #dce5ff;
-  font-size: 11px;
-}
-#bottomHint {
-  position: fixed;
-  bottom: 19px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: max-content;
-  max-width: calc(100vw - 25px);
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  border-radius: 30px;
-  background: #080b18b8;
-  color: #aab2d3;
-  font-size: 11px;
-  text-align: center;
-  backdrop-filter: blur(12px);
-}
-#bottomHint strong { color: #e5eaff; }
-#cameraVideo { display: none; }
-
-@media (max-width: 600px) {
-  .panel {
-    top: 10px;
-    left: 10px;
-    width: min(290px, calc(100vw - 20px));
-    padding: 14px;
-    max-height: calc(100vh - 75px);
-  }
-  #topStatus {
-    top: 10px;
-    right: 10px;
-    font-size: 9px;
-    padding: 7px 9px;
-  }
-  #bottomHint { bottom: 8px; font-size: 9px; }
-  .section-title { margin-top: 15px; }
-}
+:root{--bg:#05060d;--panel:rgba(13,16,31,.88);--border:rgba(255,255,255,.12);--text:#f4f6ff;--muted:#9ba3c7;--cyan:#63e8ff;--purple:#b76bff}
+*{box-sizing:border-box}
+body{margin:0;overflow:hidden;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+#scene{position:fixed;inset:0;width:100%;height:100%;display:block}
+.panel{position:fixed;z-index:5;top:18px;left:18px;width:min(330px,calc(100vw - 36px));max-height:calc(100vh - 36px);overflow-y:auto;padding:19px;border:1px solid var(--border);border-radius:20px;background:var(--panel);backdrop-filter:blur(22px);box-shadow:0 18px 70px #0008;scrollbar-width:thin}
+.brand{display:flex;align-items:center;gap:11px;margin-bottom:4px}
+.logo{display:grid;place-items:center;width:40px;height:40px;flex-shrink:0;border-radius:13px;color:#05060d;font-size:23px;font-weight:900;background:linear-gradient(135deg,var(--cyan),var(--purple))}
+h1{font-size:19px;margin:0;letter-spacing:-.5px}
+.subtitle{color:var(--muted);font-size:11px;margin-top:4px}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:20px 0 11px;color:#c8cce8;font-size:10px;font-weight:800;letter-spacing:1.5px}
+.pill{padding:4px 7px;border-radius:30px;font-size:9px;font-weight:800;letter-spacing:.6px;color:var(--muted);background:#ffffff0c;border:1px solid var(--border)}
+.pill.on{color:var(--cyan);border-color:#63e8ff55}
+button,select{color:var(--text);background:#ffffff0b;border:1px solid var(--border);border-radius:10px;padding:10px 11px;font:inherit;font-size:12px;cursor:pointer;transition:.2s}
+button:hover{border-color:#63e8ff99;background:#63e8ff12}
+button.active{color:var(--cyan);border-color:#63e8ff88;background:#63e8ff14}
+button:disabled{opacity:.45;cursor:not-allowed}
+select{width:100%;outline:none}
+select option{background:#111426}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.shape-btn{padding:10px 5px;font-size:11px}
+.control{margin:13px 0}
+.control-label{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px;color:#c9cde4;font-size:11px}
+output{color:var(--cyan);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--cyan);cursor:pointer}
+.divider{height:1px;margin-top:17px;background:var(--border)}
+.hint{margin-top:9px;color:var(--muted);font-size:10px;line-height:1.6}
+.meter{height:7px;overflow:hidden;border-radius:20px;background:#ffffff12;margin-top:10px}
+#audioMeter,#musicMeter{width:0%;height:100%;border-radius:20px;background:linear-gradient(90deg,#63e8ff,#b76bff,#ff6bba);box-shadow:0 0 15px #b76bff;transition:width .06s linear}
+#cameraPreview{display:none;width:100%;max-height:130px;object-fit:cover;transform:scaleX(-1);border-radius:10px;margin-top:10px;background:#000}
+.statusline{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:10px;margin-top:11px}
+.dot{width:6px;height:6px;border-radius:50%;background:#6b718b}
+.dot.live{background:#65f4b0;box-shadow:0 0 10px #65f4b0}
+#topStatus{position:fixed;z-index:3;top:20px;right:20px;padding:9px 13px;border:1px solid var(--border);border-radius:30px;background:#080b18a8;backdrop-filter:blur(12px);color:#dce5ff;font-size:11px}
+#bottomHint{position:fixed;bottom:19px;left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 25px);padding:10px 14px;border:1px solid var(--border);border-radius:30px;background:#080b18b8;color:#aab2d3;font-size:11px;text-align:center;backdrop-filter:blur(12px)}
+#bottomHint strong{color:#e5eaff}
+#cameraVideo{display:none}
+@media(max-width:600px){.panel{top:10px;left:10px;width:min(290px,calc(100vw - 20px));padding:14px;max-height:calc(100vh - 75px)}#topStatus{top:10px;right:10px;font-size:9px;padding:7px 9px}#bottomHint{bottom:8px;font-size:9px}.section-title{margin-top:15px}}
 </style>
 </head>
-
 <body>
 <canvas id="scene"></canvas>
-
 <div class="panel">
-  <div class="brand">
-    <div class="logo">P</div>
-    <div>
-      <h1>Parivartan 2.0</h1>
-      <div class="subtitle">Interactive Particle Universe</div>
-    </div>
-  </div>
+  <div class="brand"><div class="logo">P</div><div><h1>Parivartan 2.0</h1><div class="subtitle">Interactive Particle Universe</div></div></div>
 
-  <div class="section-title">
-    <span>PARTICLE SHAPES</span>
-    <span class="pill" id="shapePill">SPHERE</span>
-  </div>
-
+  <div class="section-title"><span>PARTICLE SHAPES</span><span class="pill" id="shapePill">SPHERE</span></div>
   <div class="grid3">
     <button class="shape-btn active" data-shape="Sphere">◉ Sphere</button>
     <button class="shape-btn" data-shape="Heart">♥ Heart</button>
@@ -252,999 +61,353 @@ input[type=range] {
     <button class="shape-btn" data-shape="Saturn">◉ Saturn</button>
   </div>
 
-  <div class="section-title">
-    <span>PARTICLE CONTROLS</span>
-  </div>
-
-  <div class="control">
-    <label class="control-label" for="speed">
-      <span>Particle speed</span>
-      <output id="speedValue">1.0×</output>
-    </label>
-    <input id="speed" type="range" min="0.1" max="3" step="0.1" value="1">
-  </div>
-
-  <div class="control">
-    <label class="control-label" for="particleSize">
-      <span>Particle size</span>
-      <output id="sizeValue">1.0×</output>
-    </label>
-    <input id="particleSize" type="range" min="0.4" max="2.5" step="0.1" value="1">
-  </div>
-
-  <div class="control">
-    <label class="control-label" for="rotationSpeed">
-      <span>Auto rotation</span>
-      <output id="rotationValue">0.6×</output>
-    </label>
-    <input id="rotationSpeed" type="range" min="0" max="2.5" step="0.1" value="0.6">
-  </div>
-
-  <div class="control">
-    <label class="control-label" for="rotationAxis">
-      <span>Rotation axis</span>
-    </label>
-    <select id="rotationAxis">
-      <option value="BOTH">Both X + Y</option>
-      <option value="X">X axis</option>
-      <option value="Y">Y axis</option>
-      <option value="Z">Z axis</option>
-    </select>
-  </div>
+  <div class="section-title"><span>PARTICLE CONTROLS</span></div>
+  <div class="control"><label class="control-label" for="speed"><span>Particle speed</span><output id="speedValue">1.0×</output></label><input id="speed" type="range" min="0.1" max="3" step="0.1" value="1"></div>
+  <div class="control"><label class="control-label" for="particleSize"><span>Particle size</span><output id="sizeValue">1.0×</output></label><input id="particleSize" type="range" min="0.4" max="2.5" step="0.1" value="1"></div>
+  <div class="control"><label class="control-label" for="rotationSpeed"><span>Auto rotation</span><output id="rotationValue">0.6×</output></label><input id="rotationSpeed" type="range" min="0" max="2.5" step="0.1" value="0.6"></div>
+  <div class="control"><label class="control-label" for="rotationAxis"><span>Rotation axis</span></label><select id="rotationAxis"><option value="BOTH">Both X + Y</option><option value="X">X axis</option><option value="Y">Y axis</option><option value="Z">Z axis</option></select></div>
 
   <div class="grid2">
-    <button id="explodeBtn">✦ Explode</button>
-    <button id="reformBtn">◎ Reform</button>
-    <button id="trailsBtn" class="active">〰 Trails: ON</button>
-    <button id="colorBtn" class="active">🌈 Colours: ON</button>
-    <button id="cursorBtn" class="active">☄ Cursor: ON</button>
-    <button id="rotateBtn" class="active">⟳ Rotation: ON</button>
+    <button id="explodeBtn">✦ Explode</button><button id="reformBtn">◎ Reform</button>
+    <button id="trailsBtn" class="active">〰 Trails: ON</button><button id="colorBtn" class="active">🌈 Colours: ON</button>
+    <button id="cursorBtn" class="active">☄ Cursor: ON</button><button id="rotateBtn" class="active">⟳ Rotation: ON</button>
   </div>
 
   <div class="divider"></div>
-
-  <div class="section-title">
-    <span>HAND TRACKING</span>
-    <span class="pill" id="handPill">OFF</span>
-  </div>
-
+  <div class="section-title"><span>HAND TRACKING</span><span class="pill" id="handPill">OFF</span></div>
   <button id="cameraBtn" style="width:100%">Enable Hand Tracking</button>
-  <video id="cameraVideo" autoplay playsinline></video>
-  <canvas id="cameraPreview"></canvas>
-
-  <div class="hint" id="handStatus">
-    Allow camera access to control particles with your hand.
-  </div>
+  <video id="cameraVideo" autoplay playsinline></video><canvas id="cameraPreview"></canvas>
+  <div class="hint" id="handStatus">Allow camera access to control particles with your hand.</div>
 
   <div class="divider"></div>
-
-  <div class="section-title">
-    <span>AUDIO REACTIVITY</span>
-    <span class="pill" id="audioPill">OFF</span>
-  </div>
-
+  <div class="section-title"><span>AUDIO REACTIVITY</span><span class="pill" id="audioPill">OFF</span></div>
   <button id="audioToggle" style="width:100%">Enable Microphone Audio</button>
+  <div class="control"><label class="control-label" for="audioSensitivity"><span>Audio sensitivity</span><output id="audioSensitivityValue">4.0×</output></label><input id="audioSensitivity" type="range" min="0.5" max="8" step="0.1" value="4"></div>
+  <div class="meter"><div id="audioMeter"></div></div>
+  <div class="hint" id="audioStatus">Enable microphone access to react to external sound; Shape Music is a separate generated soundtrack.</div>
 
-  <div class="control">
-    <label class="control-label" for="audioSensitivity">
-      <span>Audio sensitivity</span>
-      <output id="audioSensitivityValue">4.0×</output>
-    </label>
-    <input id="audioSensitivity" type="range" min="0.5" max="8" step="0.1" value="4">
-  </div>
-
-  <div class="meter">
-    <div id="audioMeter"></div>
-  </div>
-
-  <div class="hint" id="audioStatus">
-    Enable microphone access, then play music or make some sound.
-  </div>
-
-  <div class="statusline">
-    <span class="dot" id="statusDot"></span>
-    <span id="systemStatus">Initializing particle system...</span>
-  </div>
+  <div class="divider"></div>
+  <div class="section-title"><span>SHAPE MUSIC</span><span class="pill" id="musicPill">OFF</span></div>
+  <button id="musicToggle" style="width:100%">♫ Enable Shape Music</button>
+  <div class="control"><label class="control-label" for="musicVolume"><span>Music volume</span><output id="musicVolumeValue">35%</output></label><input id="musicVolume" type="range" min="0" max="100" step="1" value="35"></div>
+  <div class="hint" id="musicStatus">Enable music to hear a different generated soundscape for each shape.</div>
+  <div class="meter"><div id="musicMeter"></div></div>
+  <div class="statusline"><span class="dot" id="statusDot"></span><span id="systemStatus">Initializing particle system...</span></div>
 </div>
-
-<div id="topStatus">
-  PARIVARTAN 2.0 &nbsp;·&nbsp;
-  <span id="particleCount">6500</span> PARTICLES
-</div>
-
-<div id="bottomHint">
-  <strong>Move your cursor</strong> to interact · Use the controls to transform the universe
-</div>
+<div id="topStatus">PARIVARTAN 2.0 &nbsp;·&nbsp; <span id="particleCount">6500</span> PARTICLES</div>
+<div id="bottomHint"><strong>Move your cursor</strong> to interact · Use the controls to transform the universe</div>
 
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
+const $=id=>document.getElementById(id),canvas=$('scene');
+const COUNT=6500,TAU=Math.PI*2;
+let scene,camera,renderer,particleGroup,particles,glow,particleGeometry,glowGeometry,particleMaterial,glowMaterial;
+let positions,colors,targets,baseColors,velocities,randomOffsets;
+let currentShape='Sphere',shapeIndex=0;
+const shapeNames=['Sphere','Heart','Galaxy','Butterfly','Spiral','Saturn'];
+let particleSpeed=1,particleSize=1,rotationSpeed=.6,rotationEnabled=true,rotationAxis='BOTH',colorEnabled=true,trailsEnabled=true,cursorEnabled=true,exploded=false,explosionPower=0,handScale=1,time=0;
+let audioLevel=0,audioSensitivity=4,audioEnabled=false,audioContext=null,audioAnalyser=null,audioStream=null,audioData=null,audioSmoothedBass=0,audioSmoothedHigh=0,audioPulse=0;
+let musicEnabled=false,musicContext=null,musicMaster=null,musicBus=null,musicTimer=null,musicStep=0,musicLevel=0,musicPulse=0,musicVolume=.35,musicCurrentShape='',musicFadeToken=0;
+const musicProfiles={
+ Sphere:{wave:'sine',notes:[220,261.63,329.63,392,329.63,261.63],bass:55,tempo:1},
+ Heart:{wave:'triangle',notes:[261.63,329.63,392,523.25,392,329.63],bass:65.41,tempo:1},
+ Galaxy:{wave:'sine',notes:[110,164.81,220,329.63,246.94,164.81],bass:41.2,tempo:.72},
+ Butterfly:{wave:'sine',notes:[392,493.88,587.33,783.99,659.25,523.25],bass:98,tempo:1.25},
+ Spiral:{wave:'sawtooth',notes:[164.81,220,293.66,349.23,293.66,220],bass:55,tempo:1.35},
+ Saturn:{wave:'triangle',notes:[82.41,123.47,164.81,123.47,98,146.83],bass:41.2,tempo:.8}
+};
+let mouseX=0,mouseY=0,cursorWorld=new THREE.Vector3(),cursorRaycaster=new THREE.Raycaster(),cursorPlane=new THREE.Plane(new THREE.Vector3(0,0,1),0),clock=new THREE.Clock();
+let handEnabled=false,handLandmarker=null,cameraStream=null,lastVideoTime=-1,handGesture='None',lastGesture='',gestureStart=0,gestureCooldown=0,handRotationX=0,handRotationY=0;
 
-const $ = id => document.getElementById(id);
-const canvas = $('scene');
-
-const COUNT = 6500;
-const TAU = Math.PI * 2;
-
-let scene, camera, renderer, particleGroup, particles, glow;
-let particleGeometry, glowGeometry, particleMaterial, glowMaterial;
-let positions, colors, targets, baseColors, velocities, randomOffsets;
-
-let currentShape = 'Sphere';
-let shapeIndex = 0;
-const shapeNames = ['Sphere','Heart','Galaxy','Butterfly','Spiral','Saturn'];
-
-let particleSpeed = 1;
-let particleSize = 1;
-let rotationSpeed = .6;
-let rotationEnabled = true;
-let rotationAxis = 'BOTH';
-let colorEnabled = true;
-let trailsEnabled = true;
-let cursorEnabled = true;
-let exploded = false;
-let explosionPower = 0;
-let time = 0;
-
-let mouseX = 0;
-let mouseY = 0;
-let mouseInside = false;
-
-let handEnabled = false;
-let handLandmarker = null;
-let cameraStream = null;
-let lastVideoTime = -1;
-let handGesture = 'None';
-let lastGesture = 'None';
-let gestureStart = 0;
-let gestureCooldown = 0;
-let handRotationX = 0;
-let handRotationY = 0;
-let handScale = 1;
-
-let audioEnabled = false;
-let audioContext = null;
-let audioStream = null;
-let analyser = null;
-let audioData = null;
-let audioLevel = 0;
-let audioPulse = 0;
-let audioSensitivity = 4;
-
-const clock = new THREE.Clock();
-const cursorRaycaster = new THREE.Raycaster();
-const cursorPlane = new THREE.Plane(new THREE.Vector3(0,0,1),0);
-const cursorWorld = new THREE.Vector3();
-
-function init() {
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color('#05060d');
-
-  camera = new THREE.PerspectiveCamera(
-    55,
-    window.innerWidth / window.innerHeight,
-    .1,
-    1000
-  );
-  camera.position.set(0,0,16);
-
-  renderer = new THREE.WebGLRenderer({
-    canvas,
-    antialias: true,
-    alpha: false,
-    powerPreference: 'high-performance'
-  });
-
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.8));
-  renderer.setSize(window.innerWidth,window.innerHeight);
-  renderer.setClearColor('#05060d',1);
-  renderer.autoClear = true;
-
-  particleGroup = new THREE.Group();
-  scene.add(particleGroup);
-
-  const data = createShape('Sphere');
-  targets = data.positions;
-  baseColors = data.colors;
-
-  positions = new Float32Array(COUNT*3);
-  colors = new Float32Array(COUNT*3);
-  velocities = new Float32Array(COUNT*3);
-  randomOffsets = new Float32Array(COUNT);
-
-  for(let i=0;i<COUNT;i++) {
-    const k=i*3;
-
-    positions[k] = targets[k] + (Math.random()-.5)*.1;
-    positions[k+1] = targets[k+1] + (Math.random()-.5)*.1;
-    positions[k+2] = targets[k+2] + (Math.random()-.5)*.1;
-
-    colors[k] = baseColors[k];
-    colors[k+1] = baseColors[k+1];
-    colors[k+2] = baseColors[k+2];
-
-    randomOffsets[i] = Math.random()*TAU;
+function randomSphere(radius=1){
+ const u=Math.random(),v=Math.random(),theta=TAU*u,phi=Math.acos(2*v-1);
+ return [radius*Math.sin(phi)*Math.cos(theta),radius*Math.cos(phi),radius*Math.sin(phi)*Math.sin(theta)];
+}
+function makeShape(name){
+ const result=new Float32Array(COUNT*3);
+ for(let i=0;i<COUNT;i++){
+  let x=0,y=0,z=0;
+  if(name==='Sphere')[x,y,z]=randomSphere(3*Math.cbrt(Math.random()));
+  if(name==='Heart'){
+   const t=Math.random()*TAU,fill=Math.sqrt(Math.random());
+   x=16*Math.pow(Math.sin(t),3)*.19*fill;
+   y=(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))*.19*fill+.15;
+   z=(Math.random()-.5)*1.05*fill;
   }
+  if(name==='Galaxy'){
+   const arms=5,arm=Math.floor(Math.random()*arms),r=Math.pow(Math.random(),.62)*3.6,a=arm/arms*TAU+r*1.65+(Math.random()-.5)*.65;
+   x=Math.cos(a)*r;z=Math.sin(a)*r;y=(Math.random()-.5)*.45*(1+r*.25);
+  }
+  if(name==='Butterfly'){
+   const t=Math.random()*Math.PI*12,c=Math.exp(Math.cos(t))-2*Math.cos(4*t)-Math.pow(Math.sin(t/12),5),s=Math.random()*.2+.82;
+   x=Math.sin(t)*c*.53*s;y=Math.cos(t)*c*.53*s;z=(Math.random()-.5)*.45;
+  }
+  if(name==='Spiral'){
+   const f=Math.random(),a=f*TAU*5.5,r=.3+f*3.1;
+   x=Math.cos(a)*r;y=(f-.5)*5.4;z=Math.sin(a)*r;
+  }
+  if(name==='Saturn'){
+   if(Math.random()<.62)[x,y,z]=randomSphere(1.8*Math.cbrt(Math.random()));
+   else{
+    const a=Math.random()*TAU,r=2.35+Math.random()*1.35;
+    x=Math.cos(a)*r;z=Math.sin(a)*r;y=(Math.random()-.5)*.12;
+    const oldY=y;y=oldY*.92+z*.30;z=z*.92-oldY*.30;
+   }
+  }
+  const k=i*3;result[k]=x;result[k+1]=y;result[k+2]=z;
+ }
+ return result;
+}
+function makeBaseColors(){
+ const arr=new Float32Array(COUNT*3);
+ for(let i=0;i<COUNT;i++){
+  const k=i*3,c=new THREE.Color().setHSL(.53+Math.random()*.30,.82,.58+Math.random()*.25);
+  arr[k]=c.r;arr[k+1]=c.g;arr[k+2]=c.b;
+ }
+ return arr;
+}
+function createParticleTexture(){
+ const c=document.createElement('canvas');c.width=c.height=64;
+ const ctx=c.getContext('2d'),g=ctx.createRadialGradient(32,32,0,32,32,32);
+ g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.18,'rgba(255,255,255,.9)');g.addColorStop(.45,'rgba(255,255,255,.28)');g.addColorStop(1,'rgba(255,255,255,0)');
+ ctx.fillStyle=g;ctx.fillRect(0,0,64,64);
+ const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;return tex;
+}
+function init(){
+ scene=new THREE.Scene();scene.background=new THREE.Color('#05060d');scene.fog=new THREE.FogExp2('#05060d',.025);
+ camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,150);camera.position.set(0,0,12);
+ renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'});
+ renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;
+ particleGroup=new THREE.Group();scene.add(particleGroup);
+ positions=new Float32Array(COUNT*3);targets=makeShape('Sphere');baseColors=makeBaseColors();colors=new Float32Array(COUNT*3);velocities=new Float32Array(COUNT*3);randomOffsets=new Float32Array(COUNT);
+ for(let i=0;i<COUNT;i++){
+  const k=i*3;positions[k]=targets[k]+(Math.random()-.5)*.15;positions[k+1]=targets[k+1]+(Math.random()-.5)*.15;positions[k+2]=targets[k+2]+(Math.random()-.5)*.15;randomOffsets[i]=Math.random()*TAU;colors[k]=baseColors[k];colors[k+1]=baseColors[k+1];colors[k+2]=baseColors[k+2];
+ }
+ particleGeometry=new THREE.BufferGeometry();particleGeometry.setAttribute('position',new THREE.BufferAttribute(positions,3));particleGeometry.setAttribute('color',new THREE.BufferAttribute(colors,3));
+ particleMaterial=new THREE.PointsMaterial({size:.065,map:createParticleTexture(),transparent:true,opacity:.95,vertexColors:true,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true});
+ particles=new THREE.Points(particleGeometry,particleMaterial);particleGroup.add(particles);
+ glowGeometry=new THREE.BufferGeometry();glowGeometry.setAttribute('position',new THREE.BufferAttribute(positions,3));glowGeometry.setAttribute('color',new THREE.BufferAttribute(colors,3));
+ glowMaterial=new THREE.PointsMaterial({size:.19,map:createParticleTexture(),transparent:true,opacity:.19,vertexColors:true,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true});
+ glow=new THREE.Points(glowGeometry,glowMaterial);particleGroup.add(glow);
+ const starPositions=new Float32Array(1600*3);
+ for(let i=0;i<1600;i++){const k=i*3,p=randomSphere(35+Math.random()*35);starPositions[k]=p[0];starPositions[k+1]=p[1];starPositions[k+2]=p[2]}
+ const starGeo=new THREE.BufferGeometry();starGeo.setAttribute('position',new THREE.BufferAttribute(starPositions,3));
+ const starMat=new THREE.PointsMaterial({color:0x7181b9,size:.025,transparent:true,opacity:.55,depthWrite:false});scene.add(new THREE.Points(starGeo,starMat));
+ $('systemStatus').textContent='Particle system ready';$('statusDot').classList.add('live');addControls();
+ window.addEventListener('resize',onResize);window.addEventListener('pointermove',onPointerMove);window.addEventListener('pointerdown',onPointerDown);animate();
+}
+function setShape(name){
+ if(!shapeNames.includes(name))return;
+ currentShape=name;shapeIndex=shapeNames.indexOf(name);targets=makeShape(name);exploded=false;explosionPower=0;handScale=1;
+ document.querySelectorAll('[data-shape]').forEach(b=>b.classList.toggle('active',b.dataset.shape===name));
+ $('shapePill').textContent=name.toUpperCase();
+ if(musicEnabled)switchShapeMusic(name);
+}
+function triggerExplosion(){
+ exploded=true;explosionPower=1;
+ for(let i=0;i<COUNT;i++){
+  const k=i*3,dx=positions[k],dy=positions[k+1],dz=positions[k+2],len=Math.hypot(dx,dy,dz)||1,spread=1.5+Math.random()*4.5;
+  velocities[k]=dx/len*spread+(Math.random()-.5)*2;velocities[k+1]=dy/len*spread+(Math.random()-.5)*2;velocities[k+2]=dz/len*spread+(Math.random()-.5)*2;
+ }
+}
+function reformParticles(){exploded=false;explosionPower=0}
+function nextShape(){shapeIndex=(shapeIndex+1)%shapeNames.length;setShape(shapeNames[shapeIndex])}
+function addControls(){
+ document.querySelectorAll('[data-shape]').forEach(b=>b.addEventListener('click',()=>setShape(b.dataset.shape)));
+ $('speed').addEventListener('input',e=>{particleSpeed=+e.target.value;$('speedValue').textContent=particleSpeed.toFixed(1)+'×'});
+ $('particleSize').addEventListener('input',e=>{particleSize=+e.target.value;$('sizeValue').textContent=particleSize.toFixed(1)+'×'});
+ $('rotationSpeed').addEventListener('input',e=>{rotationSpeed=+e.target.value;$('rotationValue').textContent=rotationSpeed.toFixed(1)+'×'});
+ $('rotationAxis').addEventListener('change',e=>rotationAxis=e.target.value);
+ $('explodeBtn').addEventListener('click',triggerExplosion);$('reformBtn').addEventListener('click',reformParticles);
+ $('trailsBtn').addEventListener('click',()=>{trailsEnabled=!trailsEnabled;$('trailsBtn').classList.toggle('active',trailsEnabled);$('trailsBtn').textContent=trailsEnabled?'〰 Trails: ON':'〰 Trails: OFF';renderer.autoClear=!trailsEnabled;if(!trailsEnabled)renderer.setClearColor('#05060d',1)});
+ $('colorBtn').addEventListener('click',()=>{colorEnabled=!colorEnabled;$('colorBtn').classList.toggle('active',colorEnabled);$('colorBtn').textContent=colorEnabled?'🌈 Colours: ON':'🌈 Colours: OFF'});
+ $('cursorBtn').addEventListener('click',()=>{cursorEnabled=!cursorEnabled;$('cursorBtn').classList.toggle('active',cursorEnabled);$('cursorBtn').textContent=cursorEnabled?'☄ Cursor: ON':'☄ Cursor: OFF'});
+ $('rotateBtn').addEventListener('click',()=>{rotationEnabled=!rotationEnabled;$('rotateBtn').classList.toggle('active',rotationEnabled);$('rotateBtn').textContent=rotationEnabled?'⟳ Rotation: ON':'⟳ Rotation: OFF'});
+ $('audioSensitivity').addEventListener('input',e=>{audioSensitivity=+e.target.value;$('audioSensitivityValue').textContent=audioSensitivity.toFixed(1)+'×'});
+ $('audioToggle').addEventListener('click',toggleAudio);$('musicToggle').addEventListener('click',toggleShapeMusic);
+ $('musicVolume').addEventListener('input',e=>{musicVolume=Number(e.target.value)/100;$('musicVolumeValue').textContent=e.target.value+'%';if(musicMaster&&musicContext)musicMaster.gain.setTargetAtTime(musicVolume,musicContext.currentTime,.04)});
+ $('cameraBtn').addEventListener('click',toggleCamera);
+}
+function onPointerMove(e){mouseX=e.clientX/innerWidth*2-1;mouseY=-(e.clientY/innerHeight)*2+1}
+function onPointerDown(e){if(e.target===canvas&&!handEnabled)triggerExplosion()}
+function onResize(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2))}
 
-  particleGeometry = new THREE.BufferGeometry();
-  particleGeometry.setAttribute(
-    'position',
-    new THREE.BufferAttribute(positions,3)
-  );
-  particleGeometry.setAttribute(
-    'color',
-    new THREE.BufferAttribute(colors,3)
-  );
-
-  particleMaterial = new THREE.PointsMaterial({
-    size: .065,
-    vertexColors: true,
-    transparent: true,
-    opacity: .9,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false,
-    sizeAttenuation: true
-  });
-
-  particles = new THREE.Points(particleGeometry,particleMaterial);
-  particleGroup.add(particles);
-
-  const glowPositions = new Float32Array(COUNT*3);
-
-  glowGeometry = new THREE.BufferGeometry();
-  glowGeometry.setAttribute(
-    'position',
-    new THREE.BufferAttribute(glowPositions,3)
-  );
-  glowGeometry.setAttribute(
-    'color',
-    new THREE.BufferAttribute(colors,3)
-  );
-
-  glowMaterial = new THREE.PointsMaterial({
-    size: .19,
-    vertexColors: true,
-    transparent: true,
-    opacity: .22,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false,
-    sizeAttenuation: true
-  });
-
-  glow = new THREE.Points(glowGeometry,glowMaterial);
-  glowGeometry.attributes.position.array.set(positions);
-  glowGeometry.attributes.position.needsUpdate = true;
-  particleGroup.add(glow);
-
-  bindUI();
-
-  window.addEventListener('resize',onResize);
-  window.addEventListener('pointermove',onPointerMove);
-  window.addEventListener('pointerleave',()=>mouseInside=false);
-
-  $('systemStatus').textContent = 'Particle system ready.';
-  $('statusDot').classList.add('live');
-
-  animate();
+function makeMusicVoice(frequency,type,duration,gainValue,panValue=0,detune=0){
+ if(!musicContext||!musicBus)return;
+ const now=musicContext.currentTime,osc=musicContext.createOscillator(),filter=musicContext.createBiquadFilter(),gain=musicContext.createGain(),pan=musicContext.createStereoPanner?musicContext.createStereoPanner():null;
+ osc.type=type;osc.frequency.setValueAtTime(Math.max(20,frequency),now);osc.detune.setValueAtTime(detune,now);filter.type='lowpass';filter.frequency.setValueAtTime(2400,now);filter.Q.value=.55;
+ gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(Math.max(.0002,gainValue),now+.045);gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
+ if(pan){pan.pan.value=panValue;osc.connect(filter);filter.connect(gain);gain.connect(pan);pan.connect(musicBus)}else{osc.connect(filter);filter.connect(gain);gain.connect(musicBus)}
+ osc.start(now);osc.stop(now+duration+.03);osc.onended=()=>{try{osc.disconnect();filter.disconnect();gain.disconnect();pan?.disconnect()}catch(e){}};
+}
+function scheduleMusicStep(){
+ if(!musicEnabled||!musicContext||musicContext.state!=='running')return;
+ const p=musicProfiles[musicCurrentShape]||musicProfiles.Sphere,note=p.notes[musicStep%p.notes.length],duration=.42/p.tempo;
+ makeMusicVoice(note,p.wave,duration*1.8,.028,-.18,Math.sin(musicStep*.7)*5);
+ makeMusicVoice(note*1.5,'sine',duration*1.25,.013,.2);
+ if(musicStep%2===0)makeMusicVoice(p.bass,'sine',duration*1.7,.045);
+ if((musicCurrentShape==='Butterfly'||musicCurrentShape==='Heart')&&musicStep%2===1)makeMusicVoice(note*2,'sine',duration*.8,.012,.35);
+ if(musicCurrentShape==='Spiral'&&musicStep%2===0)makeMusicVoice(note*.5,'triangle',duration,.018,-.3);
+ musicStep++;musicLevel=Math.min(1,musicLevel+.18);musicPulse=Math.max(musicPulse,.22+(musicStep%4===0?.42:.08));
+ musicTimer=setTimeout(scheduleMusicStep,duration*1000);
+}
+function stopMusicScheduler(){if(musicTimer!==null){clearTimeout(musicTimer);musicTimer=null}}
+function switchShapeMusic(name){
+ if(!musicEnabled||!musicContext||!musicBus||!musicProfiles[name])return;
+ const token=++musicFadeToken,now=musicContext.currentTime;
+ musicBus.gain.cancelScheduledValues(now);musicBus.gain.setValueAtTime(musicBus.gain.value,now);musicBus.gain.linearRampToValueAtTime(.0001,now+.22);
+ setTimeout(()=>{if(token!==musicFadeToken||!musicEnabled||!musicContext||!musicBus)return;musicCurrentShape=name;musicStep=0;const t=musicContext.currentTime;musicBus.gain.cancelScheduledValues(t);musicBus.gain.setValueAtTime(.0001,t);musicBus.gain.linearRampToValueAtTime(1,t+.32);$('musicStatus').textContent=name+' soundscape · generated live in your browser.'},230);
+}
+async function toggleShapeMusic(){
+ if(musicEnabled){
+  musicEnabled=false;++musicFadeToken;stopMusicScheduler();
+  const oldContext=musicContext;
+  if(oldContext&&musicMaster){const t=oldContext.currentTime;musicMaster.gain.cancelScheduledValues(t);musicMaster.gain.setValueAtTime(musicMaster.gain.value,t);musicMaster.gain.linearRampToValueAtTime(.0001,t+.18);setTimeout(async()=>{try{await oldContext.close()}catch(e){}if(musicContext===oldContext){musicContext=null;musicMaster=null;musicBus=null}},220)}
+  $('musicToggle').textContent='♫ Enable Shape Music';$('musicPill').textContent='OFF';$('musicPill').classList.remove('on');$('musicStatus').textContent='Shape music is off.';musicLevel=0;musicPulse=0;$('musicMeter').style.width='0%';return;
+ }
+ try{
+  const AudioCtx=window.AudioContext||window.webkitAudioContext;if(!AudioCtx)throw new Error('Web Audio is not supported by this browser.');
+  musicContext=new AudioCtx({latencyHint:'interactive'});await musicContext.resume();
+  musicMaster=musicContext.createGain();musicBus=musicContext.createGain();musicMaster.gain.value=musicVolume;musicBus.gain.value=.0001;musicBus.connect(musicMaster);musicMaster.connect(musicContext.destination);
+  musicEnabled=true;musicCurrentShape=currentShape;musicStep=0;$('musicToggle').textContent='♫ Disable Shape Music';$('musicPill').textContent='LIVE';$('musicPill').classList.add('on');$('musicStatus').textContent=currentShape+' soundscape · generated live in your browser.';
+  musicBus.gain.setTargetAtTime(1,musicContext.currentTime,.22);scheduleMusicStep();
+ }catch(err){console.error('Shape music error:',err);$('musicStatus').textContent='Could not start music: '+(err.message||'Audio unavailable.');try{await musicContext?.close()}catch(e){}musicContext=null;musicMaster=null;musicBus=null;musicEnabled=false}
 }
 
-function createShape(name) {
-  const p = new Float32Array(COUNT*3);
-  const c = new Float32Array(COUNT*3);
-
-  for(let i=0;i<COUNT;i++) {
-    const k=i*3;
-    let x=0,y=0,z=0;
-    const u=Math.random();
-    const v=Math.random();
-
-    if(name==='Sphere') {
-      const a=Math.acos(2*u-1);
-      const b=TAU*v;
-      const r=4.1*Math.cbrt(Math.random());
-
-      x=r*Math.sin(a)*Math.cos(b);
-      y=r*Math.sin(a)*Math.sin(b);
-      z=r*Math.cos(a);
-
-    } else if(name==='Heart') {
-      const t=Math.random()*TAU;
-      const r=Math.sqrt(Math.random());
-
-      x=16*Math.pow(Math.sin(t),3)*.22*r;
-      y=(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))*.22*r;
-      z=(Math.random()-.5)*1.3*r;
-
-    } else if(name==='Galaxy') {
-      const arm=Math.floor(Math.random()*4);
-      const r=Math.pow(Math.random(),.6)*5;
-      const a=r*1.15+arm*TAU/4+(Math.random()-.5)*.35;
-
-      x=Math.cos(a)*r;
-      z=Math.sin(a)*r;
-      y=(Math.random()-.5)*.55;
-
-    } else if(name==='Butterfly') {
-      const t=(Math.random()*12-6);
-      const r=Math.exp(Math.cos(t))-2*Math.cos(4*t)-Math.pow(Math.sin(t/12),5);
-
-      x=Math.sin(t)*r*.65;
-      y=Math.cos(t)*r*.65;
-      z=(Math.random()-.5)*.65;
-
-    } else if(name==='Spiral') {
-      const r=Math.random()*4.7;
-      const a=r*2.4+Math.random()*.5;
-
-      x=Math.cos(a)*r;
-      z=Math.sin(a)*r;
-      y=(Math.random()-.5)*1.1;
-
-    } else if(name==='Saturn') {
-      if(Math.random()<.62) {
-        const a=Math.acos(2*u-1);
-        const b=TAU*v;
-        const r=2.15*Math.cbrt(Math.random());
-
-        x=r*Math.sin(a)*Math.cos(b);
-        y=r*Math.sin(a)*Math.sin(b);
-        z=r*Math.cos(a);
-
-      } else {
-        const a=Math.random()*TAU;
-        const r=2.7+Math.random()*1.7;
-
-        x=Math.cos(a)*r;
-        y=Math.sin(a)*r*.16;
-        z=Math.sin(a)*r*.65;
-      }
-    }
-
-    p[k]=x;
-    p[k+1]=y;
-    p[k+2]=z;
-
-    const hue={
-      Sphere:.53,
-      Heart:.96,
-      Galaxy:.65,
-      Butterfly:.82,
-      Spiral:.12,
-      Saturn:.11
-    }[name]??.55;
-
-    const color = new THREE.Color().setHSL(
-      (hue+Math.random()*.12)%1,
-      .8,
-      .55+Math.random()*.2
-    );
-
-    c[k]=color.r;
-    c[k+1]=color.g;
-    c[k+2]=color.b;
-  }
-
-  return {positions:p,colors:c};
+async function toggleAudio(){
+ if(audioEnabled){
+  audioEnabled=false;if(audioStream)audioStream.getTracks().forEach(t=>t.stop());audioStream=null;
+  if(audioContext){try{await audioContext.close()}catch(e){}}
+  audioContext=null;audioAnalyser=null;audioData=null;
+  $('audioToggle').textContent='Enable Microphone Audio';$('audioPill').textContent='OFF';$('audioPill').classList.remove('on');$('audioStatus').textContent='Microphone is off.';return;
+ }
+ try{
+  if(!navigator.mediaDevices?.getUserMedia)throw new Error('Microphone access requires HTTPS or localhost.');
+  audioStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false});
+  audioContext=new(window.AudioContext||window.webkitAudioContext)();await audioContext.resume();
+  const source=audioContext.createMediaStreamSource(audioStream);audioAnalyser=audioContext.createAnalyser();audioAnalyser.fftSize=2048;audioAnalyser.smoothingTimeConstant=.55;audioAnalyser.minDecibels=-90;audioAnalyser.maxDecibels=-10;source.connect(audioAnalyser);
+  audioData=new Uint8Array(audioAnalyser.frequencyBinCount);audioEnabled=true;
+  $('audioToggle').textContent='Disable Microphone Audio';$('audioPill').textContent='LIVE';$('audioPill').classList.add('on');$('audioStatus').textContent='Listening. Play music or make sound to see the particles react.';
+ }catch(err){console.error(err);$('audioStatus').textContent='Microphone error: '+(err.message||'Permission denied')+'. Check browser permissions.';if(audioStream)audioStream.getTracks().forEach(t=>t.stop());audioStream=null}
+}
+function updateAudio(dt){
+ if(!audioEnabled||!audioAnalyser||!audioData){audioLevel*=Math.max(0,1-dt*2.5);audioPulse*=Math.max(0,1-dt*4);$('audioMeter').style.width=Math.round(audioLevel*100)+'%';return}
+ audioAnalyser.getByteFrequencyData(audioData);
+ let total=0,bassSum=0,midSum=0,highSum=0,peak=0,count=audioData.length;
+ const bassEnd=Math.max(2,Math.floor(count*.07)),midEnd=Math.max(bassEnd+1,Math.floor(count*.35));
+ for(let i=0;i<count;i++){const v=audioData[i]/255;total+=v;if(i<bassEnd)bassSum+=v;else if(i<midEnd)midSum+=v;else highSum+=v;if(v>peak)peak=v}
+ const average=total/count,bass=bassSum/bassEnd,mid=midSum/Math.max(1,midEnd-bassEnd),high=highSum/Math.max(1,count-midEnd);
+ const raw=Math.min(1,(average*1.3+bass*3.8+mid*1.2+peak*.20)*audioSensitivity);
+ audioLevel+=(raw-audioLevel)*Math.min(1,dt*(raw>audioLevel?18:5));
+ audioSmoothedBass+=(bass-audioSmoothedBass)*Math.min(1,dt*15);audioSmoothedHigh+=(high-audioSmoothedHigh)*Math.min(1,dt*10);
+ const signal=Math.min(1,(audioSmoothedBass*5.5+audioSmoothedHigh*1.5)*audioSensitivity);
+ audioPulse+=(signal-audioPulse)*Math.min(1,dt*(signal>audioPulse?24:7));
+ $('audioMeter').style.width=Math.round(Math.min(1,audioLevel)*100)+'%';
+ $('audioStatus').textContent=audioLevel>.08?'Sound detected — particles reacting to your audio.':'Listening for music or sound...';
 }
 
-function setShape(name) {
-  if(!shapeNames.includes(name)) return;
-
-  currentShape=name;
-  shapeIndex=shapeNames.indexOf(name);
-
-  const data=createShape(name);
-  targets=data.positions;
-  baseColors=data.colors;
-
-  $('shapePill').textContent=name.toUpperCase();
-
-  document.querySelectorAll('[data-shape]').forEach(btn=>{
-    btn.classList.toggle('active',btn.dataset.shape===name);
-  });
+async function toggleCamera(){
+ if(handEnabled){
+  handEnabled=false;if(cameraStream)cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null;$('cameraVideo').srcObject=null;$('cameraPreview').style.display='none';$('cameraBtn').textContent='Enable Hand Tracking';$('handPill').textContent='OFF';$('handPill').classList.remove('on');$('handStatus').textContent='Hand tracking is off.';return;
+ }
+ try{
+  $('cameraBtn').disabled=true;$('handStatus').textContent='Loading hand tracking model...';
+  const vision=await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.1.1/vision_bundle.mjs');
+  const files=await vision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.1.1/wasm');
+  handLandmarker=await vision.HandLandmarker.createFromOptions(files,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task',delegate:'GPU'},runningMode:'VIDEO',numHands:1});
+  cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:640,height:480},audio:false});
+  const video=$('cameraVideo');video.srcObject=cameraStream;await video.play();
+  handEnabled=true;$('cameraPreview').style.display='block';$('cameraBtn').textContent='Disable Hand Tracking';$('handPill').textContent='LIVE';$('handPill').classList.add('on');$('handStatus').textContent='Show your hand to the camera.';requestAnimationFrame(processHandFrame);
+ }catch(err){console.error(err);$('handStatus').textContent='Could not start hand tracking: '+(err.message||'Check camera permission.');if(cameraStream)cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null;handEnabled=false}
+ finally{$('cameraBtn').disabled=false}
+}
+function distance(a,b){return Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z)}
+function processHandFrame(){
+ if(!handEnabled||!handLandmarker)return;
+ const video=$('cameraVideo'),preview=$('cameraPreview'),ctx=preview.getContext('2d');
+ if(video.readyState>=2&&video.currentTime!==lastVideoTime){
+  lastVideoTime=video.currentTime;
+  try{
+   const result=handLandmarker.detectForVideo(video,performance.now());preview.width=video.videoWidth||640;preview.height=video.videoHeight||480;ctx.clearRect(0,0,preview.width,preview.height);ctx.drawImage(video,0,0,preview.width,preview.height);
+   if(result.landmarks&&result.landmarks.length){const lm=result.landmarks[0];drawHand(lm,ctx,preview.width,preview.height);interpretHand(lm)}
+   else{handGesture='None';$('handStatus').textContent='No hand detected — place your hand in view.'}
+  }catch(err){console.warn('Hand detection frame error:',err)}
+ }
+ requestAnimationFrame(processHandFrame);
+}
+function drawHand(lm,ctx,w,h){
+ const links=[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
+ ctx.strokeStyle='#63e8ff';ctx.lineWidth=2;
+ for(const[a,b]of links){ctx.beginPath();ctx.moveTo(lm[a].x*w,lm[a].y*h);ctx.lineTo(lm[b].x*w,lm[b].y*h);ctx.stroke()}
+ for(const p of lm){ctx.beginPath();ctx.arc(p.x*w,p.y*h,3,0,TAU);ctx.fillStyle='#d7a5ff';ctx.fill()}
+}
+function interpretHand(lm){
+ const now=performance.now(),indexUp=lm[8].y<lm[6].y,middleUp=lm[12].y<lm[10].y,ringUp=lm[16].y<lm[14].y,pinkyUp=lm[20].y<lm[18].y;
+ const pinch=distance(lm[4],lm[8])/(distance(lm[5],lm[17])||.1);
+ let gesture='None';
+ if(pinch<.14)gesture='Pinch';
+ else if(indexUp&&middleUp&&!ringUp&&!pinkyUp)gesture='Two Fingers';
+ else if(indexUp&&middleUp&&ringUp&&pinkyUp)gesture='Open Palm';
+ else if(!indexUp&&!middleUp&&!ringUp&&!pinkyUp)gesture='Fist';
+ const centerX=(lm[0].x+lm[5].x+lm[9].x+lm[17].x)/4,centerY=(lm[0].y+lm[5].y+lm[9].y+lm[17].y)/4;
+ handRotationY=(.5-centerX)*1.6;handRotationX=(.5-centerY)*1.1;
+ handScale=THREE.MathUtils.clamp(.7+distance(lm[0],lm[9])*1.5,.7,1.65);
+ if(gesture!==lastGesture){lastGesture=gesture;gestureStart=now}
+ if(now-gestureStart>550&&now>gestureCooldown&&gesture!==handGesture){
+  handGesture=gesture;if(gesture==='Open Palm')triggerExplosion();if(gesture==='Fist')reformParticles();if(gesture==='Two Fingers')nextShape();if(gesture==='Pinch')setShape('Heart');if(gesture!=='None')gestureCooldown=now+1200;
+ }
+ $('handStatus').textContent='Gesture: '+gesture+' · Move your hand to rotate; pinch for Heart.';
 }
 
-function nextShape() {
-  const next=(shapeIndex+1)%shapeNames.length;
-  setShape(shapeNames[next]);
+function updateCursorForce(dt){
+ if(!cursorEnabled||exploded)return;
+ cursorRaycaster.setFromCamera(new THREE.Vector2(mouseX,mouseY),camera);cursorRaycaster.ray.intersectPlane(cursorPlane,cursorWorld);
+ const radius=2.2,strength=2.5*particleSpeed;
+ for(let i=0;i<COUNT;i++){
+  const k=i*3,dx=positions[k]-cursorWorld.x,dy=positions[k+1]-cursorWorld.y,dz=positions[k+2]-cursorWorld.z,d=Math.sqrt(dx*dx+dy*dy+dz*dz);
+  if(d<radius&&d>.001){const f=(1-d/radius)*strength*dt;positions[k]+=dx/d*f;positions[k+1]+=dy/d*f;positions[k+2]+=dz/d*f}
+ }
 }
-
-function triggerExplosion() {
-  exploded=true;
-  explosionPower=1;
-
-  for(let i=0;i<COUNT;i++) {
-    const k=i*3;
-
-    const v=new THREE.Vector3(
-      positions[k],
-      positions[k+1],
-      positions[k+2]
-    ).normalize();
-
-    velocities[k]=v.x*(2+Math.random()*7)+(Math.random()-.5)*2;
-    velocities[k+1]=v.y*(2+Math.random()*7)+(Math.random()-.5)*2;
-    velocities[k+2]=v.z*(2+Math.random()*7)+(Math.random()-.5)*2;
+function updateParticles(dt){
+ const ease=Math.min(1,dt*(2.2+particleSpeed*2.6));
+ const pulse=Math.max(audioEnabled?audioLevel:0,musicEnabled?musicLevel*.25+musicPulse*.45:0);
+ const beat=Math.max(audioEnabled?audioPulse:0,musicEnabled?musicPulse:0);
+ const audioScale=1+pulse*.85+beat*.55,breath=1+Math.sin(time*1.2)*.025,scale=handEnabled?handScale:1;
+ for(let i=0;i<COUNT;i++){
+  const k=i*3;
+  if(exploded){
+   positions[k]+=velocities[k]*dt*particleSpeed;positions[k+1]+=velocities[k+1]*dt*particleSpeed;positions[k+2]+=velocities[k+2]*dt*particleSpeed;
+   velocities[k]*=.987;velocities[k+1]*=.987;velocities[k+2]*=.987;
+   const x=positions[k],z=positions[k+2],swirl=dt*(.25+audioPulse*.8);positions[k]+=z*swirl*.25;positions[k+2]-=x*swirl*.25;
+   if(explosionPower>0){const pull=Math.min(1,dt*.15);velocities[k]+=(targets[k]-positions[k])*.02*pull;velocities[k+1]+=(targets[k+1]-positions[k+1])*.02*pull;velocities[k+2]+=(targets[k+2]-positions[k+2])*.02*pull}
+  }else{
+   const breathing=breath+Math.sin(time*3+randomOffsets[i])*.012;
+   positions[k]+=(targets[k]*scale*audioScale*breathing-positions[k])*ease;
+   positions[k+1]+=(targets[k+1]*scale*audioScale*breathing-positions[k+1])*ease;
+   positions[k+2]+=(targets[k+2]*scale*audioScale*breathing-positions[k+2])*ease;
   }
+  if(colorEnabled){
+   const hue=(.54+i/COUNT*.28+time*.035+audioLevel*.20+audioPulse*.08)%1,sat=.72+Math.min(.25,audioLevel*.25),light=THREE.MathUtils.clamp(.48+audioLevel*.20+audioPulse*.12,.35,.95),c=new THREE.Color().setHSL(hue,sat,light);
+   colors[k]=c.r;colors[k+1]=c.g;colors[k+2]=c.b;
+  }else{colors[k]=baseColors[k];colors[k+1]=baseColors[k+1];colors[k+2]=baseColors[k+2]}
+ }
+ particleGeometry.attributes.position.needsUpdate=true;particleGeometry.attributes.color.needsUpdate=true;glowGeometry.attributes.position.needsUpdate=true;glowGeometry.attributes.color.needsUpdate=true;
+ particleMaterial.size=.065*particleSize*(1+pulse*2.5+beat*1.6);glowMaterial.size=.19*particleSize*(1+pulse*4+beat*2.8);
+ particleMaterial.opacity=THREE.MathUtils.clamp(.78+pulse*.22,0,1);glowMaterial.opacity=THREE.MathUtils.clamp(.19+pulse*.65+beat*.35,.1,1);
 }
-
-function reformParticles() {
-  exploded=false;
-  explosionPower=0;
+function animate(){
+ requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);time+=dt;updateAudio(dt);
+ if(musicEnabled){musicLevel+=(.24-musicLevel)*Math.min(1,dt*2.2);musicPulse+=(0-musicPulse)*Math.min(1,dt*2.8);$('musicMeter').style.width=Math.round(Math.min(1,musicLevel+musicPulse*.45)*100)+'%'}
+ else{musicLevel*=Math.max(0,1-dt*3);musicPulse*=Math.max(0,1-dt*4)}
+ updateCursorForce(dt);updateParticles(dt);
+ if(rotationEnabled){const rot=dt*rotationSpeed;if(rotationAxis==='X'||rotationAxis==='BOTH')particleGroup.rotation.x+=rot*.45;if(rotationAxis==='Y'||rotationAxis==='BOTH')particleGroup.rotation.y+=rot;if(rotationAxis==='Z')particleGroup.rotation.z+=rot}
+ if(handEnabled){particleGroup.rotation.y+=(handRotationY-particleGroup.rotation.y)*Math.min(1,dt*2);particleGroup.rotation.x+=(handRotationX-particleGroup.rotation.x)*Math.min(1,dt*2)}
+ if(trailsEnabled){renderer.autoClear=false;renderer.setClearColor('#05060d',.20);renderer.clearDepth();renderer.render(scene,camera)}
+ else{renderer.autoClear=true;renderer.setClearColor('#05060d',1);renderer.render(scene,camera)}
 }
-
-function bindUI() {
-  document.querySelectorAll('[data-shape]').forEach(btn=>{
-    btn.addEventListener('click',()=>setShape(btn.dataset.shape));
-  });
-
-  $('speed').addEventListener('input',e=>{
-    particleSpeed=Number(e.target.value);
-    $('speedValue').textContent=particleSpeed.toFixed(1)+'×';
-  });
-
-  $('particleSize').addEventListener('input',e=>{
-    particleSize=Number(e.target.value);
-    $('sizeValue').textContent=particleSize.toFixed(1)+'×';
-  });
-
-  $('rotationSpeed').addEventListener('input',e=>{
-    rotationSpeed=Number(e.target.value);
-    $('rotationValue').textContent=rotationSpeed.toFixed(1)+'×';
-  });
-
-  $('rotationAxis').addEventListener('change',e=>{
-    rotationAxis=e.target.value;
-  });
-
-  $('explodeBtn').addEventListener('click',triggerExplosion);
-  $('reformBtn').addEventListener('click',reformParticles);
-
-  $('trailsBtn').addEventListener('click',()=>{
-    trailsEnabled=!trailsEnabled;
-    $('trailsBtn').classList.toggle('active',trailsEnabled);
-    $('trailsBtn').textContent=trailsEnabled?'〰 Trails: ON':'〰 Trails: OFF';
-  });
-
-  $('colorBtn').addEventListener('click',()=>{
-    colorEnabled=!colorEnabled;
-    $('colorBtn').classList.toggle('active',colorEnabled);
-    $('colorBtn').textContent=colorEnabled?'🌈 Colours: ON':'🌈 Colours: OFF';
-  });
-
-  $('cursorBtn').addEventListener('click',()=>{
-    cursorEnabled=!cursorEnabled;
-    $('cursorBtn').classList.toggle('active',cursorEnabled);
-    $('cursorBtn').textContent=cursorEnabled?'☄ Cursor: ON':'☄ Cursor: OFF';
-  });
-
-  $('rotateBtn').addEventListener('click',()=>{
-    rotationEnabled=!rotationEnabled;
-    $('rotateBtn').classList.toggle('active',rotationEnabled);
-    $('rotateBtn').textContent=rotationEnabled?'⟳ Rotation: ON':'⟳ Rotation: OFF';
-  });
-
-  $('cameraBtn').addEventListener('click',toggleCamera);
-  $('audioToggle').addEventListener('click',toggleAudio);
-
-  $('audioSensitivity').addEventListener('input',e=>{
-    audioSensitivity=Number(e.target.value);
-    $('audioSensitivityValue').textContent=audioSensitivity.toFixed(1)+'×';
-  });
-}
-
-function onResize() {
-  camera.aspect=window.innerWidth/window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth,window.innerHeight);
-}
-
-function onPointerMove(e) {
-  mouseX=(e.clientX/window.innerWidth)*2-1;
-  mouseY=-(e.clientY/window.innerHeight)*2+1;
-  mouseInside=true;
-}
-
-async function toggleAudio() {
-  if(audioEnabled) {
-    audioEnabled=false;
-
-    if(audioContext) {
-      await audioContext.close();
-    }
-
-    if(audioStream) {
-      audioStream.getTracks().forEach(track=>track.stop());
-    }
-
-    audioContext=null;
-    audioStream=null;
-    analyser=null;
-    audioData=null;
-
-    $('audioToggle').textContent='Enable Microphone Audio';
-    $('audioPill').textContent='OFF';
-    $('audioPill').classList.remove('on');
-    $('audioStatus').textContent='Audio reactivity is off.';
-    $('audioMeter').style.width='0%';
-
-    return;
-  }
-
-  try {
-    audioStream=await navigator.mediaDevices.getUserMedia({
-      audio:true,
-      video:false
-    });
-
-    audioContext=new (window.AudioContext||window.webkitAudioContext)({
-      latencyHint:'interactive'
-    });
-
-    const source=audioContext.createMediaStreamSource(audioStream);
-
-    analyser=audioContext.createAnalyser();
-    analyser.fftSize=1024;
-    analyser.smoothingTimeConstant=.15;
-
-    source.connect(analyser);
-
-    audioData=new Uint8Array(analyser.frequencyBinCount);
-    audioEnabled=true;
-
-    $('audioToggle').textContent='Disable Microphone Audio';
-    $('audioPill').textContent='LIVE';
-    $('audioPill').classList.add('on');
-    $('audioStatus').textContent='Listening — play music or make some sound.';
-
-  } catch(err) {
-    console.error('Audio error:',err);
-    $('audioStatus').textContent='Microphone error: '+(err.message||'Check microphone permission.');
-  }
-}
-
-function updateAudio(dt) {
-  if(!audioEnabled||!analyser||!audioData) {
-    audioLevel=Math.max(0,audioLevel-dt*2);
-    audioPulse=Math.max(0,audioPulse-dt*3);
-    return;
-  }
-
-  analyser.getByteFrequencyData(audioData);
-
-  const length=audioData.length;
-  const bassEnd=Math.max(2,Math.floor(length*.08));
-  const midEnd=Math.max(bassEnd+1,Math.floor(length*.35));
-
-  let bass=0,mid=0,high=0;
-
-  for(let i=0;i<bassEnd;i++) bass+=audioData[i];
-  for(let i=bassEnd;i<midEnd;i++) mid+=audioData[i];
-  for(let i=midEnd;i<length;i++) high+=audioData[i];
-
-  bass/=bassEnd*255;
-  mid/=(midEnd-bassEnd)*255;
-  high/=(length-midEnd)*255;
-
-  const raw=Math.min(
-    1,
-    (bass*.55+mid*.32+high*.13)*audioSensitivity
-  );
-
-  const attack=raw>audioLevel?.035:.11;
-  audioLevel+=(raw-audioLevel)*Math.min(1,dt/attack);
-
-  const peak=Math.max(0,raw-.22);
-  audioPulse+=(peak-audioPulse)*Math.min(
-    1,
-    dt/(peak>audioPulse?.025:.10)
-  );
-
-  $('audioMeter').style.width=Math.min(100,audioLevel*100)+'%';
-
-  $('audioStatus').textContent=audioLevel>.08
-    ?'Sound detected — particles reacting to your audio.'
-    :'Listening for music or sound...';
-}
-
-async function toggleCamera() {
-  if(handEnabled) {
-    handEnabled=false;
-
-    if(cameraStream) {
-      cameraStream.getTracks().forEach(t=>t.stop());
-    }
-
-    cameraStream=null;
-    $('cameraVideo').srcObject=null;
-    $('cameraPreview').style.display='none';
-    $('cameraBtn').textContent='Enable Hand Tracking';
-    $('handPill').textContent='OFF';
-    $('handPill').classList.remove('on');
-    $('handStatus').textContent='Hand tracking is off.';
-
-    return;
-  }
-
-  try {
-    $('cameraBtn').disabled=true;
-    $('handStatus').textContent='Loading hand tracking model...';
-
-    const vision=await import(
-      'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.1.1/vision_bundle.mjs'
-    );
-
-    const files=await vision.FilesetResolver.forVisionTasks(
-      'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.1.1/wasm'
-    );
-
-    handLandmarker=await vision.HandLandmarker.createFromOptions(files,{
-      baseOptions:{
-        modelAssetPath:
-          'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task',
-        delegate:'GPU'
-      },
-      runningMode:'VIDEO',
-      numHands:1
-    });
-
-    cameraStream=await navigator.mediaDevices.getUserMedia({
-      video:{facingMode:'user',width:640,height:480},
-      audio:false
-    });
-
-    const video=$('cameraVideo');
-    video.srcObject=cameraStream;
-    await video.play();
-
-    handEnabled=true;
-
-    $('cameraPreview').style.display='block';
-    $('cameraBtn').textContent='Disable Hand Tracking';
-    $('handPill').textContent='LIVE';
-    $('handPill').classList.add('on');
-    $('handStatus').textContent='Show your hand to the camera.';
-
-    requestAnimationFrame(processHandFrame);
-
-  } catch(err) {
-    console.error('Camera/hand tracking error:',err);
-
-    $('handStatus').textContent=
-      'Could not start hand tracking: '+(err.message||'Check camera permission.');
-
-    if(cameraStream) {
-      cameraStream.getTracks().forEach(t=>t.stop());
-    }
-
-    cameraStream=null;
-    handEnabled=false;
-
-  } finally {
-    $('cameraBtn').disabled=false;
-  }
-}
-
-function distance(a,b) {
-  return Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
-}
-
-function processHandFrame() {
-  if(!handEnabled||!handLandmarker) return;
-
-  const video=$('cameraVideo');
-  const preview=$('cameraPreview');
-  const ctx=preview.getContext('2d');
-
-  if(video.readyState>=2 && video.currentTime!==lastVideoTime) {
-    lastVideoTime=video.currentTime;
-
-    try {
-      const result=handLandmarker.detectForVideo(
-        video,
-        performance.now()
-      );
-
-      preview.width=video.videoWidth||640;
-      preview.height=video.videoHeight||480;
-
-      ctx.clearRect(0,0,preview.width,preview.height);
-      ctx.drawImage(video,0,0,preview.width,preview.height);
-
-      if(result.landmarks&&result.landmarks.length) {
-        const lm=result.landmarks[0];
-        drawHand(lm,ctx,preview.width,preview.height);
-        interpretHand(lm);
-      } else {
-        handGesture='None';
-        $('handStatus').textContent='No hand detected — place your hand in view.';
-      }
-
-    } catch(err) {
-      console.warn('Hand detection frame error:',err);
-    }
-  }
-
-  requestAnimationFrame(processHandFrame);
-}
-
-function drawHand(lm,ctx,w,h) {
-  const connections=[
-    [0,1],[1,2],[2,3],[3,4],
-    [0,5],[5,6],[6,7],[7,8],
-    [5,9],[9,10],[10,11],[11,12],
-    [9,13],[13,14],[14,15],[15,16],
-    [13,17],[17,18],[18,19],[19,20],[0,17]
-  ];
-
-  ctx.strokeStyle='#63e8ff';
-  ctx.lineWidth=2;
-
-  for(const [a,b] of connections) {
-    ctx.beginPath();
-    ctx.moveTo(lm[a].x*w,lm[a].y*h);
-    ctx.lineTo(lm[b].x*w,lm[b].y*h);
-    ctx.stroke();
-  }
-
-  for(const p of lm) {
-    ctx.beginPath();
-    ctx.arc(p.x*w,p.y*h,3,0,TAU);
-    ctx.fillStyle='#d7a5ff';
-    ctx.fill();
-  }
-}
-
-function interpretHand(lm) {
-  const now=performance.now();
-
-  const thumbTip=lm[4];
-  const indexTip=lm[8];
-
-  const indexUp=lm[8].y<lm[6].y;
-  const middleUp=lm[12].y<lm[10].y;
-  const ringUp=lm[16].y<lm[14].y;
-  const pinkyUp=lm[20].y<lm[18].y;
-
-  const thumbIndex=distance(thumbTip,indexTip);
-  const palmWidth=distance(lm[5],lm[17])||.1;
-  const pinchRatio=thumbIndex/palmWidth;
-
-  let gesture='None';
-
-  if(pinchRatio<.14) {
-    gesture='Pinch';
-  } else if(indexUp&&middleUp&&!ringUp&&!pinkyUp) {
-    gesture='Two Fingers';
-  } else if(indexUp&&middleUp&&ringUp&&pinkyUp) {
-    gesture='Open Palm';
-  } else if(!indexUp&&!middleUp&&!ringUp&&!pinkyUp) {
-    gesture='Fist';
-  }
-
-  const centerX=(lm[0].x+lm[5].x+lm[9].x+lm[17].x)/4;
-  const centerY=(lm[0].y+lm[5].y+lm[9].y+lm[17].y)/4;
-
-  handRotationY=(.5-centerX)*1.6;
-  handRotationX=(.5-centerY)*1.1;
-
-  const palmSize=distance(lm[0],lm[9]);
-  handScale=THREE.MathUtils.clamp(.7+palmSize*1.5,.7,1.65);
-
-  if(gesture!==lastGesture) {
-    lastGesture=gesture;
-    gestureStart=now;
-  }
-
-  const stable=now-gestureStart>550;
-
-  if(stable && now>gestureCooldown && gesture!==handGesture) {
-    handGesture=gesture;
-
-    if(gesture==='Open Palm') triggerExplosion();
-    if(gesture==='Fist') reformParticles();
-    if(gesture==='Two Fingers') nextShape();
-    if(gesture==='Pinch') setShape('Heart');
-
-    if(gesture!=='None') {
-      gestureCooldown=now+1200;
-    }
-  }
-
-  $('handStatus').textContent=
-    'Gesture: '+gesture+' · Move your hand to rotate; pinch for Heart.';
-}
-
-function updateCursorForce(dt) {
-  if(!cursorEnabled||!mouseInside) return;
-
-  cursorRaycaster.setFromCamera(
-    new THREE.Vector2(mouseX,mouseY),
-    camera
-  );
-
-  cursorRaycaster.ray.intersectPlane(cursorPlane,cursorWorld);
-
-  const forceRadius=2.2;
-  const force=cursorWorld;
-  const forceStrength=2.5*particleSpeed;
-
-  if(exploded) return;
-
-  for(let i=0;i<COUNT;i++) {
-    const k=i*3;
-
-    const dx=positions[k]-force.x;
-    const dy=positions[k+1]-force.y;
-    const dz=positions[k+2]-force.z;
-
-    const d=Math.sqrt(dx*dx+dy*dy+dz*dz);
-
-    if(d<forceRadius && d>.001) {
-      const f=(1-d/forceRadius)*forceStrength*dt;
-
-      positions[k]+=dx/d*f;
-      positions[k+1]+=dy/d*f;
-      positions[k+2]+=dz/d*f;
-    }
-  }
-
-  particleGeometry.attributes.position.needsUpdate=true;
-  glowGeometry.attributes.position.needsUpdate=true;
-}
-
-function updateParticles(dt) {
-  const ease=Math.min(1,dt*(2.2+particleSpeed*2.6));
-  const pulse=audioEnabled?audioLevel:0;
-  const beat=audioEnabled?audioPulse:0;
-  const audioScale=1+pulse*.85+beat*.55;
-  const globalBreath=1+Math.sin(time*1.2)*.025;
-  const scale=handEnabled?handScale:1;
-
-  for(let i=0;i<COUNT;i++) {
-    const k=i*3;
-
-    if(exploded) {
-      positions[k]+=velocities[k]*dt*particleSpeed;
-      positions[k+1]+=velocities[k+1]*dt*particleSpeed;
-      positions[k+2]+=velocities[k+2]*dt*particleSpeed;
-
-      velocities[k]*=.987;
-      velocities[k+1]*=.987;
-      velocities[k+2]*=.987;
-
-      const x=positions[k];
-      const z=positions[k+2];
-      const swirl=dt*(.25+audioPulse*.8);
-
-      positions[k]+=z*swirl*.25;
-      positions[k+2]-=x*swirl*.25;
-
-      if(explosionPower>0) {
-        const pull=Math.min(1,dt*.15);
-
-        velocities[k]+=(targets[k]-positions[k])*.02*pull;
-        velocities[k+1]+=(targets[k+1]-positions[k+1])*.02*pull;
-        velocities[k+2]+=(targets[k+2]-positions[k+2])*.02*pull;
-      }
-
-    } else {
-      const breathing=globalBreath+Math.sin(time*3+randomOffsets[i])*.012;
-
-      const targetX=targets[k]*scale*audioScale*breathing;
-      const targetY=targets[k+1]*scale*audioScale*breathing;
-      const targetZ=targets[k+2]*scale*audioScale*breathing;
-
-      positions[k]+=(targetX-positions[k])*ease;
-      positions[k+1]+=(targetY-positions[k+1])*ease;
-      positions[k+2]+=(targetZ-positions[k+2])*ease;
-    }
-
-    // Original rainbow particle colour animation is preserved.
-    if(colorEnabled) {
-      const hue=(
-        .54 +
-        i/COUNT*.28 +
-        time*.035 +
-        audioLevel*.20 +
-        audioPulse*.08
-      )%1;
-
-      const saturation=.72+Math.min(.25,audioLevel*.25);
-
-      const lightness=THREE.MathUtils.clamp(
-        .48+audioLevel*.20+audioPulse*.12,
-        .35,
-        .95
-      );
-
-      const c=new THREE.Color().setHSL(
-        hue,
-        saturation,
-        lightness
-      );
-
-      colors[k]=c.r;
-      colors[k+1]=c.g;
-      colors[k+2]=c.b;
-
-    } else {
-      colors[k]=baseColors[k];
-      colors[k+1]=baseColors[k+1];
-      colors[k+2]=baseColors[k+2];
-    }
-  }
-
-  particleGeometry.attributes.position.needsUpdate=true;
-  particleGeometry.attributes.color.needsUpdate=true;
-
-  glowGeometry.attributes.position.array.set(positions);
-  glowGeometry.attributes.position.needsUpdate=true;
-  glowGeometry.attributes.color.needsUpdate=true;
-
-  particleMaterial.size=.065*particleSize*(1+pulse*2.5+beat*1.6);
-  glowMaterial.size=.19*particleSize*(1+pulse*4+beat*2.8);
-
-  particleMaterial.opacity=THREE.MathUtils.clamp(
-    .78+pulse*.22,
-    0,
-    1
-  );
-
-  glowMaterial.opacity=THREE.MathUtils.clamp(
-    .19+pulse*.65+beat*.35,
-    .1,
-    1
-  );
-}
-
-function animate() {
-  requestAnimationFrame(animate);
-
-  const dt=Math.min(clock.getDelta(),.05);
-  time+=dt;
-
-  updateAudio(dt);
-  updateParticles(dt);
-  updateCursorForce(dt);
-
-  if(rotationEnabled) {
-    const rot=dt*rotationSpeed;
-
-    if(rotationAxis==='X'||rotationAxis==='BOTH') {
-      particleGroup.rotation.x+=rot*.45;
-    }
-
-    if(rotationAxis==='Y'||rotationAxis==='BOTH') {
-      particleGroup.rotation.y+=rot;
-    }
-
-    if(rotationAxis==='Z') {
-      particleGroup.rotation.z+=rot;
-    }
-  }
-
-  if(handEnabled) {
-    particleGroup.rotation.y+=(
-      handRotationY-particleGroup.rotation.y
-    )*Math.min(1,dt*2);
-
-    particleGroup.rotation.x+=(
-      handRotationX-particleGroup.rotation.x
-    )*Math.min(1,dt*2);
-  }
-
-  if(trailsEnabled) {
-    renderer.autoClear=false;
-    renderer.setClearColor('#05060d',.20);
-    renderer.clearDepth();
-    renderer.render(scene,camera);
-  } else {
-    renderer.autoClear=true;
-    renderer.setClearColor('#05060d',1);
-    renderer.render(scene,camera);
-  }
-}
-
+window.addEventListener('beforeunload',()=>{
+ stopMusicScheduler();try{audioStream?.getTracks().forEach(t=>t.stop())}catch(e){}try{cameraStream?.getTracks().forEach(t=>t.stop())}catch(e){}try{musicContext?.close()}catch(e){}try{audioContext?.close()}catch(e){}
+});
 init();
 </script>
 </body>
