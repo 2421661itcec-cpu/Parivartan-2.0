@@ -197,18 +197,56 @@ function toggleButton(id,fn){
 }
 
 // Procedural cinematic music engine: bass, melody, harmonics and rhythmic layers.
-function voice(freq,type,duration,volume,pan=0,cutoff=2600){
- if(!musicCtx||!musicBus)return;
- const c=musicCtx,now=c.currentTime,o=c.createOscillator(),f=c.createBiquadFilter(),g=c.createGain(),p=c.createStereoPanner();
- o.type=type;o.frequency.setValueAtTime(Math.max(18,freq),now);
- f.type='lowpass';f.frequency.setValueAtTime(cutoff,now);f.Q.value=.65;
- g.gain.setValueAtTime(.0001,now);
- g.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),now+.06);
- g.gain.exponentialRampToValueAtTime(.0001,now+duration);
- p.pan.value=pan;o.connect(f);f.connect(g);g.connect(p);p.connect(musicBus);
- o.start(now);o.stop(now+duration+.04);
- o.onended=()=>{try{o.disconnect();f.disconnect();g.disconnect();p.disconnect()}catch(e){}};
+
+function voice(freq, type, duration, volume, pan = 0, cutoff = 3200) {
+  if (!musicCtx || !musicBus) return;
+
+  const c = musicCtx;
+  const now = c.currentTime;
+  const osc = c.createOscillator();
+  const filter = c.createBiquadFilter();
+  const gain = c.createGain();
+  const stereo = c.createStereoPanner();
+
+  osc.type = type;
+  osc.frequency.setValueAtTime(Math.max(20, freq), now);
+
+  filter.type = "lowpass";
+  filter.frequency.setValueAtTime(cutoff, now);
+  filter.Q.value = 0.8;
+
+  // Louder, punchier sound with a smooth attack
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(
+    Math.max(0.0002, volume * 1.8),
+    now + 0.035
+  );
+  gain.gain.setValueAtTime(
+    Math.max(0.0002, volume * 1.8),
+    now + Math.max(0.05, duration * 0.55)
+  );
+  gain.gain.exponentialRampToValueAtTime(
+    0.0001,
+    now + duration
+  );
+
+  stereo.pan.value = pan;
+  osc.connect(filter);
+  filter.connect(gain);
+  gain.connect(stereo);
+  stereo.connect(musicBus);
+
+  osc.start(now);
+  osc.stop(now + duration + 0.03);
+
+  osc.onended = () => {
+    osc.disconnect();
+    filter.disconnect();
+    gain.disconnect();
+    stereo.disconnect();
+  };
 }
+
 function kick(duration){
  if(!musicCtx||!musicBus)return;
  const c=musicCtx,now=c.currentTime,o=c.createOscillator(),g=c.createGain();
